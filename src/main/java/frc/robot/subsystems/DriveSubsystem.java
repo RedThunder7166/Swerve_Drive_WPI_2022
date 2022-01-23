@@ -6,6 +6,8 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
+import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -23,6 +25,8 @@ public class DriveSubsystem extends SubsystemBase {
 
   private ShuffleboardTab swerveTab = Shuffleboard.getTab("SDS Swerve");
   private ShuffleboardTab moduleTab = Shuffleboard.getTab("Module Info");
+
+  //private PowerDistribution PDP = new PowerDistribution();
 
   private NetworkTableEntry xSpeedEntry = 
   swerveTab.add("xBox xSpeed", 0)
@@ -44,10 +48,17 @@ public class DriveSubsystem extends SubsystemBase {
   swerveTab.add("FR State v", 0)
           .getEntry();
 
+  private NetworkTableEntry rearLeftStateEntry = 
+    swerveTab.add("RL State v", 0)
+          .getEntry();
+  
+  private NetworkTableEntry rearRightStateEntry =
+    swerveTab.add("RR State v", 0)
+          .getEntry();
+
   private NetworkTableEntry gyroEntry =
   swerveTab.add("Gyro Heading", 0)
           .getEntry();
-
 
   private final SwerveModule m_frontLeft = 
     new SwerveModule(
@@ -107,6 +118,8 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // Update the odometry in the periodic block
 
+    //SmartDashboard.putNumber("PDP RL Drive", PDP.getCurrent(3));
+    //SmartDashboard.putNumber("PDP RR Drive", PDP.getCurrent(13));
     gyroEntry.setDouble(m_gyro.getAngle());
 
     m_odometry.update(
@@ -164,6 +177,8 @@ public class DriveSubsystem extends SubsystemBase {
     rotEntry.setDouble(rot);
     frontLeftStateEntry.setDouble(swerveModuleStates[0].speedMetersPerSecond);
     frontRightStateEntry.setDouble(swerveModuleStates[1].speedMetersPerSecond);
+    rearRightStateEntry.setDouble(swerveModuleStates[2].speedMetersPerSecond);
+    rearLeftStateEntry.setDouble(swerveModuleStates[3].speedMetersPerSecond);
 
   }
 

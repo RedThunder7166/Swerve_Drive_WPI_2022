@@ -20,8 +20,6 @@ import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IndexerSubsystem;
-import frc.robot.subsystems.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -37,12 +35,9 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Intake m_intake = new Intake();
-  private final IndexerSubsystem m_indexer = new IndexerSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
 
   // The first argument is the root container
   // The second argument is whether logging and config should be given separate tabs
@@ -67,25 +62,11 @@ public class RobotContainer {
             * DriveConstants.kMaxSpeedMetersPerSecond * -1, 
             modifyAxis(m_driverController.getRightX()) // rot
             * DriveConstants.kMaxRotationalSpeedMetersPerSecond * -1, 
-            true),
+            false),
             
         m_robotDrive));
 
-      m_intake.setDefaultCommand(
-        new RunCommand(
-          () ->
-            m_intake.setIntakeMotor(m_operatorController.getLeftY()),
-            
-            m_intake));
 
-
-
-    m_indexer.setDefaultCommand(
-      new RunCommand(
-        () ->
-        m_indexer.setIndexerMotors(m_operatorController.getRightY()),
-
-        m_indexer));
     
   }
 
