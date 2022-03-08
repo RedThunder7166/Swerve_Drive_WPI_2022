@@ -32,9 +32,9 @@ public final class Constants {
         public static final int kRearRightTurningMotorPort = 7;
     
         public static final int kFrontLeftTurningEncoderPorts = 9; 
-        public static final int kRearLeftTurningEncoderPorts = 11;
-        public static final int kFrontRightTurningEncoderPorts = 13;
-        public static final int kRearRightTurningEncoderPorts = 15;
+        public static final int kRearLeftTurningEncoderPorts = 10;
+        public static final int kFrontRightTurningEncoderPorts = 11;
+        public static final int kRearRightTurningEncoderPorts = 12;
 
         public static final double kFrontLeftAngleZero = 353.1; // FIXME: Add angle offset
         public static final double kRearLeftAngleZero = 78.8; // FIXME: Add angle offset
@@ -45,13 +45,6 @@ public final class Constants {
         public static final boolean kRearLeftTurningEncoderReversed = true;
         public static final boolean kFrontRightTurningEncoderReversed = false;
         public static final boolean kRearRightTurningEncoderReversed = true;
-    
-        // Drive Encoder ports should be the same as the drive motors.  Code kept for comparison to WPI example
-
-        // public static final int kFrontLeftDriveEncoderPorts = 8;
-        // public static final int kRearLeftDriveEncoderPorts = 10;
-        // public static final int kFrontRightDriveEncoderPorts = 12;
-        // public static final int kRearRightDriveEncoderPorts = 14;
     
         public static final boolean kFrontLeftDriveEncoderReversed = false;
         public static final boolean kRearLeftDriveEncoderReversed = true;
