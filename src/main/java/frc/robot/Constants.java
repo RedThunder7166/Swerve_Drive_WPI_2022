@@ -75,7 +75,7 @@ public final class Constants {
         public static final double kMaxSpeedMetersPerSecond = 2;
         public static final double kMaxRotationalSpeedMetersPerSecond = 4; // Constant multiplied by controller input
 
-        public static final double ksTurning = 0.742; // FIXME feedforward turning
+        public static final double ksTurning = 0.7; // FIXME feedforward turning
         public static final double kvTurning = 0.216;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
 

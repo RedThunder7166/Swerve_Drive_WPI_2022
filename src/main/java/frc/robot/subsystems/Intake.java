@@ -10,10 +10,9 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-  private final WPI_TalonFX intakeMotor = new WPI_TalonFX(22); //FIXME change the CAN ID
+  private final WPI_TalonFX intakeMotor = new WPI_TalonFX(20); 
 
   public void intakeMotor(double speed){
-
     intakeMotor.setVoltage(speed * 12);
   }
 

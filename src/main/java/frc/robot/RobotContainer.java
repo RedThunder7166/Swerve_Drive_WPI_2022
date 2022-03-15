@@ -19,7 +19,6 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.subsystems.Climber;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
@@ -40,7 +39,6 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final Indexer m_indexer = new Indexer();
   private final Intake m_intake = new Intake();
-  private final Climber m_climber = new Climber();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -73,12 +71,7 @@ public class RobotContainer {
             
         m_robotDrive));
 
-   m_indexer.setDefaultCommand(
-     new RunCommand(
-       () ->
-        m_indexer.indexerMotor(m_operatorController.getLeftY()),
-        m_indexer)
-    );
+
    
    m_intake.setDefaultCommand(
      new RunCommand(
@@ -88,36 +81,23 @@ public class RobotContainer {
      
     );
 
-   
-   m_climber.setDefaultCommand(
-     new RunCommand(
-       () ->
-       m_climber.interiorArm(m_operatorController.getLeftY()),//FIXME change control input
-       m_climber)
-   );
-    
-
-   m_climber.setDefaultCommand(
-     new RunCommand(
-       () ->
-       m_climber.exteriorArm(m_operatorController.getLeftY()),//FIXME change control input
-       m_climber)
-   );
-
-
-   m_climber.setDefaultCommand(
-    new RunCommand(
-     () ->
-     m_climber.interiorTrack(m_operatorController.getLeftY()),//FIXME change control input
-     m_climber)
-    );
-    
-    m_climber.setDefaultCommand(
+    m_indexer.setDefaultCommand(
       new RunCommand(
-      () ->
-     m_climber.exteriorTrack(m_operatorController.getLeftY()),
-     m_climber)
+        () ->
+          m_indexer.driveIndexer(m_operatorController.getRightY()),
+          m_indexer)
     );
+
+   
+
+    
+
+
+
+
+
+    
+
     
 
   }
