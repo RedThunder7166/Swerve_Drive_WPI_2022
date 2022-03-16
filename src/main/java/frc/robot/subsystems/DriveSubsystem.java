@@ -6,8 +6,6 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj.ADXRS450_Gyro;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -128,6 +126,8 @@ public class DriveSubsystem extends SubsystemBase {
       m_rearRight.getState(),
       m_frontRight.getState(),
       m_rearRight.getState());
+
+      
   }
 
   // Returns the currently-estimated pose of the robot

@@ -19,13 +19,17 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.IndexerIntakeCommand;
+import frc.robot.commands.InnerArmCommand;
+import frc.robot.commands.OuterArmCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.Indexer;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.IndexerIntakeSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -37,12 +41,35 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
 
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
-  private final Indexer m_indexer = new Indexer();
-  private final Intake m_intake = new Intake();
+  private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
+  private final IndexerIntakeSubsystem m_indexerIntakeSubsystem = new IndexerIntakeSubsystem();
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
+  XboxController m_climberController = new XboxController(OIConstants.kClimberControllerPort);
+
+  Button DR_A_Button = new JoystickButton(m_driverController, 1);
+  Button DR_B_Button = new JoystickButton(m_driverController, 2);
+  Button DR_X_Button = new JoystickButton(m_driverController, 3);
+  Button DR_Y_Button = new JoystickButton(m_driverController, 4);
+  Button DR_LB_Button = new JoystickButton(m_driverController, 5);
+  Button DR_RB_Button = new JoystickButton(m_driverController, 6);
+  Button DR_Select_Button = new JoystickButton(m_driverController, 7);
+  Button DR_Start_Button = new JoystickButton(m_driverController, 8);
+  Button DR_Left_Stick_Button = new JoystickButton(m_driverController, 9);
+  Button DR_Right_Stick_Button = new JoystickButton(m_driverController, 10);
+  
+  Button OP_A_Button = new JoystickButton(m_operatorController, 1);
+  Button OP_B_Button = new JoystickButton(m_operatorController, 2);
+  Button OP_X_Button = new JoystickButton(m_operatorController, 3);
+  Button OP_Y_Button = new JoystickButton(m_operatorController, 4);
+  Button OP_LB_Button = new JoystickButton(m_operatorController, 5);
+  Button OP_RB_Button = new JoystickButton(m_operatorController, 6);
+  Button OP_Select_Button = new JoystickButton(m_operatorController, 7);
+  Button OP_Start_Button = new JoystickButton(m_operatorController, 8);
+  Button OP_Left_Stick_Button = new JoystickButton(m_operatorController, 9);
+  Button OP_Right_Stick_Button = new JoystickButton(m_operatorController, 10);
 
   // The first argument is the root container
   // The second argument is whether logging and config should be given separate tabs
@@ -62,43 +89,14 @@ public class RobotContainer {
         () -> 
           m_robotDrive.drive(
             modifyAxis(m_driverController.getLeftY()) // xAxis
-            * DriveConstants.kMaxSpeedMetersPerSecond * -1, 
+            * DriveConstants.kMaxSpeedMetersPerSecond, 
             modifyAxis(m_driverController.getLeftX()) // yAxis
-            * DriveConstants.kMaxSpeedMetersPerSecond * -1, 
+            * DriveConstants.kMaxSpeedMetersPerSecond, 
             modifyAxis(m_driverController.getRightX()) // rot
-            * DriveConstants.kMaxRotationalSpeedMetersPerSecond * -1, 
-            false),
+            * DriveConstants.kMaxRotationalSpeedMetersPerSecond, 
+            true),
             
         m_robotDrive));
-
-
-   
-   m_intake.setDefaultCommand(
-     new RunCommand(
-      () ->
-       m_intake.intakeMotor(m_operatorController.getLeftY()),//FIXME fix controller inputs  
-       m_intake)
-     
-    );
-
-    m_indexer.setDefaultCommand(
-      new RunCommand(
-        () ->
-          m_indexer.driveIndexer(m_operatorController.getRightY()),
-          m_indexer)
-    );
-
-   
-
-    
-
-
-
-
-
-    
-
-    
 
   }
 
@@ -113,6 +111,17 @@ public class RobotContainer {
         new Button(m_driverController::getBackButton)
         // No requirements because we don't need to interrupt anything
         .whenPressed(m_robotDrive::zeroHeading);
+
+        OP_LB_Button.whenHeld(new InnerArmCommand(m_climberSubsystem, 
+                                                  () -> m_operatorController.getRightY(), 
+                                                  () -> m_operatorController.getLeftY()));
+        OP_RB_Button.whenHeld(new OuterArmCommand(m_climberSubsystem, 
+                                                  () -> m_operatorController.getRightY(), 
+                                                  () -> m_operatorController.getLeftY()));
+        OP_Select_Button.toggleWhenPressed(new IndexerIntakeCommand(m_indexerIntakeSubsystem, 
+                                                                    ()-> m_operatorController.getLeftY(),
+                                                                    () -> m_operatorController.getRightY()));
+
   }
 
 

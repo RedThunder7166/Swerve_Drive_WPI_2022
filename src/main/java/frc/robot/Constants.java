@@ -36,10 +36,10 @@ public final class Constants {
         public static final int kFrontRightTurningEncoderPorts = 11;
         public static final int kRearRightTurningEncoderPorts = 12;
 
-        public static final double kFrontLeftAngleZero = 353.1; // FIXME: Add angle offset
-        public static final double kRearLeftAngleZero = 78.8; // FIXME: Add angle offset
-        public static final double kFrontRightAngleZero = 331.6; // FIXME: Add angle offset
-        public static final double kRearRightAngleZero = 323.7; // FIXME: Add angle offset
+        public static final double kFrontLeftAngleZero = -32.959; 
+        public static final double kRearLeftAngleZero = -28.477; 
+        public static final double kFrontRightAngleZero = -97.471; 
+        public static final double kRearRightAngleZero = 169.805; 
     
         public static final boolean kFrontLeftTurningEncoderReversed = false;
         public static final boolean kRearLeftTurningEncoderReversed = true;
@@ -94,19 +94,9 @@ public final class Constants {
         public static final double kWheelDiameterMeters = 0.1016; // 4 inches
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI; // C = D * pi
         public static final double kDrivetoMetersPerSecond = (10 * kWheelCircumferenceMeters)/(kDriveGearRatio * 2048);
-
-        // Unused in our code
-
-        // public static final double kDriveEncoderDistancePerPulse =
-        //     // Assumes the encoders are directly mounted on the wheel shafts
-        //     (kWheelDiameterMeters * Math.PI) / (double) kDriveCANcoderCPR;
     
-        // public static final double kTurningEncoderDistancePerPulse =
-        //     // Assumes the encoders are on a 1:1 reduction with the module shaft.
-        //     (2 * Math.PI) / (double) kTurningFalconEncoderCPR;
-    
-        public static final double kPModuleTurningController = 7.5; // FIXME kp Turning
-        public static final double kDModuleTurningController = .1; // FIXME kD Turning
+        public static final double kPModuleTurningController = 5; // FIXME kp Turning
+        public static final double kDModuleTurningController = 0; // FIXME kD Turning
     
         public static final double kPModuleDriveController = 3; // FIXME kp driving
       }
@@ -114,6 +104,7 @@ public final class Constants {
       public static final class OIConstants {
         public static final int kDriverControllerPort = 0;
 		    public static final int kOperatorControllerPort = 1;
+        public static final int kClimberControllerPort = 2;
       }
     
       public static final class AutoConstants {
@@ -134,12 +125,19 @@ public final class Constants {
 
       public static final class MechanismConstants{
 
-        public static final int kIntakeMotor = 0;  // FIXME change this
-        public static final int kIndexerMotor1 = 1; //FIXME change this
-        public static final int kIndexerMotor2 = 2; //FIXME change this
-        public static final int kExteriorClimb = 0; //FIXME change this 
-        public static final int kInteriorClimb = 0; //FIXME change this
-        public static final int kInteriorTrack = 0; //FIXME change this
-        public static final int kExteriorTrack = 0; //FIXME change this 
+        //Intake and indexer CAN id's
+        public static final int kIntakeMotor = 20;  
+        public static final int kfrontIndexerMotor = 21; 
+        public static final int krearIndexerMotorFalcon = 22; 
+
+        //Climb motor CAN id's
+        public static final int kOuterClimbMotor = 24; 
+        public static final int kInnerClimbMotor = 23; 
+
+        // Ball screw motor CAN id's
+        public static final int kBSOuterLeftMotor = 25;
+        public static final int kBSOuterRightMotor = 26;
+        public static final int kBSInnerLeftMotor = 27;
+        public static final int kBSInnerRightMotor = 28;
       }
     }
