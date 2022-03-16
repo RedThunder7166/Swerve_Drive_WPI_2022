@@ -119,7 +119,7 @@ public class RobotContainer {
                                                   () -> m_operatorController.getRightY(), 
                                                   () -> m_operatorController.getLeftY()));
         OP_Select_Button.toggleWhenPressed(new IndexerIntakeCommand(m_indexerIntakeSubsystem, 
-                                                                    ()-> m_operatorController.getLeftY(),
+                                                                    () -> m_operatorController.getLeftY(),
                                                                     () -> m_operatorController.getRightY()));
 
   }
@@ -154,6 +154,7 @@ public class RobotContainer {
         config);
 
     /** thetaController is for the x, y, and theta motions of the robot
+     * PID for trajectory - makes it so you don't overshot the desired position (x, y, theta)
      * Error for x/y is meters, theta is degrees/radians
      * Tune them by making solo x/y trajectories as well as theta trajectories
     */

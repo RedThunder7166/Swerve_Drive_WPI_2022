@@ -19,16 +19,25 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   //Spark 5676 RPM
   //Falcon 6380 RPM
 
-  private final double kNeoFalconRatio = 5676/6380;
+  private final double kNeoFalconRatio = .89;
   private final double kp_indexer = .6;
   private final double kp_intake = .6;
+  private final double kDeadband = .1;
+  private double indexerSpeed = 0;
 
   /** Creates a new IndexerIntakeSubsystem. */
   public IndexerIntakeSubsystem() {}
 
   public void driveIndexerIntake(double indexer, double intake){
-    rearIndexerMotorFalcon.setVoltage(indexer * 12 * kp_indexer * kNeoFalconRatio);
-    frontIndexerMotor.setVoltage(indexer * 12 * kp_indexer);
+
+    if (Math.abs(indexer) < kDeadband){
+      indexerSpeed = 0;
+    } else {
+      indexerSpeed = indexer;
+    }
+
+    rearIndexerMotorFalcon.setVoltage(indexerSpeed * 12 * kp_indexer * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(indexerSpeed * 12 * kp_indexer);
 
     intakeMotor.setVoltage(intake * 12 * kp_intake);
   }

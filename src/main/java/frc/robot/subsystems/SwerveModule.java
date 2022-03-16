@@ -40,7 +40,6 @@ public class SwerveModule extends SubsystemBase {
     new PIDController(ModuleConstants.kPModuleDriveController, 0, 0);
   
 
-  ShuffleboardTab PIDtab = Shuffleboard.getTab("PID Tuning");
 
   //Using a TrapezoidProfile PIDController to allow for smooth turning
   private final ProfiledPIDController m_turningPIDController = 
@@ -65,8 +64,7 @@ public class SwerveModule extends SubsystemBase {
       int driveMotorChannel,
       int turningMotorChannel,
       int turningEncoderPorts,
-      double angleZero,
-      ShuffleboardLayout container) {
+      double angleZero) {
     
     // Initialize the motors
     m_driveMotor = new WPI_TalonFX(driveMotorChannel);

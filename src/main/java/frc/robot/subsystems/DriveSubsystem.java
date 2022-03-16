@@ -22,7 +22,6 @@ import frc.robot.Constants.DriveConstants;
 public class DriveSubsystem extends SubsystemBase {
 
   private ShuffleboardTab swerveTab = Shuffleboard.getTab("SDS Swerve");
-  private ShuffleboardTab moduleTab = Shuffleboard.getTab("Module Info");
 
   //private PowerDistribution PDP = new PowerDistribution();
 
@@ -63,42 +62,28 @@ public class DriveSubsystem extends SubsystemBase {
       DriveConstants.kFrontLeftDriveMotorPort,
       DriveConstants.kFrontLeftTurningMotorPort,
       DriveConstants.kFrontLeftTurningEncoderPorts,
-      DriveConstants.kFrontLeftAngleZero,
-      moduleTab.getLayout("Front Left Module", BuiltInLayouts.kList)
-      .withSize(2, 4)
-      .withPosition(0, 0));
+      DriveConstants.kFrontLeftAngleZero);
 
   private final SwerveModule m_rearLeft =
     new SwerveModule(
       DriveConstants.kRearLeftDriveMotorPort, 
       DriveConstants.kRearLeftTurningMotorPort, 
       DriveConstants.kRearLeftTurningEncoderPorts,
-      DriveConstants.kRearLeftAngleZero,
-      moduleTab.getLayout("Rear Left Module", BuiltInLayouts.kList)
-      .withSize(2, 4)
-      .withPosition(2, 0));
+      DriveConstants.kRearLeftAngleZero);
 
   private final SwerveModule m_frontRight = 
     new SwerveModule(
       DriveConstants.kFrontRightDriveMotorPort, 
       DriveConstants.kFrontRightTurningMotorPort, 
       DriveConstants.kFrontRightTurningEncoderPorts,
-      DriveConstants.kFrontRightAngleZero,
-      moduleTab.getLayout("Front Right Module", BuiltInLayouts.kList)
-      .withSize(2, 4)
-      .withPosition(4, 0));
+      DriveConstants.kFrontRightAngleZero);
 
   private final SwerveModule m_rearRight = 
     new SwerveModule(
       DriveConstants.kRearRightDriveMotorPort, 
       DriveConstants.kRearRightTurningMotorPort, 
       DriveConstants.kRearRightTurningEncoderPorts,
-      DriveConstants.kRearRightAngleZero,
-      moduleTab.getLayout("Rear Right Module", BuiltInLayouts.kList)
-      .withSize(2, 4)
-      .withPosition(6, 0));
-
- 
+      DriveConstants.kRearRightAngleZero);
 
   // Initializing the gyro sensor
   private final Gyro m_gyro = new ADXRS450_Gyro();
