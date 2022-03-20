@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,16 +31,16 @@ public class ClimberSubsystem extends SubsystemBase {
 
 
 
-    innerClimbMotor.setVoltage(Math.pow(innerClimb, 2) * 12);
-    outerClimbMotor.setVoltage(Math.pow(outerClimb, 2) * 12);
+    innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
+    outerClimbMotor.setVoltage(Math.pow(outerClimb, 3) * 12);
 
     //BSinner
-    bsInnerLeftMotor.setVoltage(Math.pow(innerBS, 2) * 12);
-    bsInnerRightMotor.setVoltage(Math.pow(innerBS, 2) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
+    bsInnerLeftMotor.setVoltage(Math.pow(innerBS, 3) * 12);
+    bsInnerRightMotor.setVoltage(Math.pow(innerBS, 3) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
 
     //BSouter
-    bsOuterLeftMotor.setVoltage(Math.pow(outerBS, 2) * 12);
-    bsOuterRightMotor.setVoltage(Math.pow(outerBS, 2) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
+    bsOuterLeftMotor.setVoltage(Math.pow(outerBS, 3) * 12);
+    bsOuterRightMotor.setVoltage(Math.pow(outerBS, 3) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
 
   }
 
@@ -52,19 +53,27 @@ public class ClimberSubsystem extends SubsystemBase {
     bsInnerLeftMotor.setNeutralMode(NeutralMode.Brake);
     bsInnerRightMotor.setNeutralMode(NeutralMode.Brake);
 
-    innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
-    outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
-    bsOuterLeftMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
-    bsOuterRightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
-    bsInnerLeftMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
-    bsInnerRightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    innerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+    outerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+    bsOuterLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10000);
+    bsOuterRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10000);
+    bsInnerLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10000);
+    bsInnerRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 10000);
 
-    innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
-    outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
-    bsOuterLeftMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
-    bsOuterRightMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
-    bsInnerLeftMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
-    bsInnerRightMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    innerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10000);
+    outerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10000);
+    bsOuterLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10000);
+    bsOuterRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10000);
+    bsInnerLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 10000);
+    bsInnerRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 1000);
+
+    innerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 10000);
+    outerClimbMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 10000);
+    bsOuterLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 10000);
+    bsOuterRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 10000);
+    bsInnerLeftMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 400);
+    bsInnerRightMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, 400);
+
 
     // innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
     // outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);

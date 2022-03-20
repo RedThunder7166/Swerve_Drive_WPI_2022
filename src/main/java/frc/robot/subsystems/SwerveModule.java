@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -77,6 +78,9 @@ public class SwerveModule extends SubsystemBase {
     this.m_turnEncoder = new CANCoder(turningEncoderPorts);
     this.m_turnEncoder.configMagnetOffset(-1 * angleZero);
     this.m_turnEncoder.configAbsoluteSensorRange(AbsoluteSensorRange.Signed_PlusMinus180);
+    this.m_turnEncoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, 10, 100);
+
+    m_turningMotor.configSelectedFeedbackSensor(TalonFXFeedbackDevice.IntegratedSensor, 0, 0);
 
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 

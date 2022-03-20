@@ -4,7 +4,10 @@
 
 package frc.robot.subsystems;
 
+import java.io.ObjectInputFilter.Status;
+
 import com.ctre.phoenix.motorcontrol.StatusFrame;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -34,19 +37,33 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   /** Creates a new IndexerIntakeSubsystem. */
   public IndexerIntakeSubsystem() {
     // Change status frames of unimportant motors to reduce CAN usage
-    rearIndexerMotorFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000);
-    intakeMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000);
-    rearIndexerMotorFalcon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000);
 
-    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
-    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+    setStatusFrames(rearIndexerMotorFalcon, 60000);
+    setStatusFrames(intakeMotor, 60000);
+
+    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 60000);
+    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 60000);
     
   }
 
+
+  public void setStatusFrames(WPI_TalonFX motor, int period){
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General,period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_4_AinTempVbat, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_6_Misc, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_7_CommStatus, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_9_MotProfBuffer, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_10_MotionMagic, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_11_UartGadgeteer, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_12_Feedback1, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_13_Base_PIDF0, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_14_Turn_PIDF1, period);
+    motor.setStatusFramePeriod(StatusFrameEnhanced.Status_15_FirmwareApiStatus, period);
+  }
   public void driveIndexerIntake(double indexer, double intake){
-
-
-    
 
     if (Math.abs(indexer) < kDeadband){
       indexerSpeed = 0;
