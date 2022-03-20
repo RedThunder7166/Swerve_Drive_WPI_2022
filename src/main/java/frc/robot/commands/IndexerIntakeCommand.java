@@ -30,11 +30,14 @@ public class IndexerIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     m_indexerIntakeSubsystem.driveIndexerIntake(m_indexer.getAsDouble(), m_intake.getAsDouble());
+    m_indexerIntakeSubsystem.setIntakeActive(true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    m_indexerIntakeSubsystem.setIntakeActive(false);
+  }
 
   // Returns true when the command should end.
   @Override

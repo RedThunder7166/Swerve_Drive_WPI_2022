@@ -8,6 +8,7 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -38,8 +39,10 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+  //Boolean used to display if the conveyor system is active
+  private Boolean intake = false;
+  
   // The robot's subsystems and commands are defined here...
-
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final IndexerIntakeSubsystem m_indexerIntakeSubsystem = new IndexerIntakeSubsystem();
@@ -47,7 +50,6 @@ public class RobotContainer {
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   XboxController m_operatorController = new XboxController(OIConstants.kOperatorControllerPort);
-  XboxController m_climberController = new XboxController(OIConstants.kClimberControllerPort);
 
   Button DR_A_Button = new JoystickButton(m_driverController, 1);
   Button DR_B_Button = new JoystickButton(m_driverController, 2);
@@ -121,6 +123,13 @@ public class RobotContainer {
         OP_Select_Button.toggleWhenPressed(new IndexerIntakeCommand(m_indexerIntakeSubsystem, 
                                                                     () -> m_operatorController.getLeftY(),
                                                                     () -> m_operatorController.getRightY()));
+        
+        SmartDashboard.putBoolean("Intake Active", intake);
+        if(OP_Select_Button.getAsBoolean() == true){
+          intake = true;
+        } else {
+          intake = false;
+        }
 
   }
 

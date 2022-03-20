@@ -4,9 +4,13 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.CANSparkMaxLowLevel.PeriodicFrame;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -15,6 +19,8 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   private final WPI_TalonFX rearIndexerMotorFalcon = new WPI_TalonFX(Constants.MechanismConstants.krearIndexerMotorFalcon); 
   private final CANSparkMax frontIndexerMotor = new CANSparkMax(Constants.MechanismConstants.kfrontIndexerMotor, MotorType.kBrushless);
   private final WPI_TalonFX intakeMotor = new WPI_TalonFX(20); 
+  
+
 
   //Spark 5676 RPM
   //Falcon 6380 RPM
@@ -26,9 +32,21 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   private double indexerSpeed = 0;
 
   /** Creates a new IndexerIntakeSubsystem. */
-  public IndexerIntakeSubsystem() {}
+  public IndexerIntakeSubsystem() {
+    // Change status frames of unimportant motors to reduce CAN usage
+    rearIndexerMotorFalcon.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000);
+    intakeMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 1000);
+    rearIndexerMotorFalcon.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 1000);
+
+    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus2, 1000);
+    frontIndexerMotor.setPeriodicFramePeriod(PeriodicFrame.kStatus1, 1000);
+    
+  }
 
   public void driveIndexerIntake(double indexer, double intake){
+
+
+    
 
     if (Math.abs(indexer) < kDeadband){
       indexerSpeed = 0;
@@ -41,6 +59,13 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
 
     intakeMotor.setVoltage(intake * 12 * kp_intake);
   }
+
+  // Publishes on the dashboard 
+  public void setIntakeActive(boolean activity){
+    SmartDashboard.putBoolean("Intake Active", activity);
+  }
+
+
 
   @Override
   public void periodic() {

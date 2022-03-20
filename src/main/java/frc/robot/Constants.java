@@ -72,7 +72,7 @@ public final class Constants {
         public static final double ksVolts = 0.509;
         public static final double kvVoltSecondsPerMeter = 2.73;
         public static final double kaVoltSecondsSquaredPerMeter = 0.124;
-        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxSpeedMetersPerSecond = 1.5;
         public static final double kMaxRotationalSpeedMetersPerSecond = 4; // Constant multiplied by controller input
 
         public static final double ksTurning = 0.7; // FIXME feedforward turning
