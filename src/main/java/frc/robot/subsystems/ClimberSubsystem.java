@@ -5,6 +5,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatusFrame;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,12 +27,8 @@ public class ClimberSubsystem extends SubsystemBase {
 //TODO: comment postive and negative directions
   public void driveArms(double innerClimb, double outerClimb, double innerBS, double outerBS){
 
-    innerClimbMotor.setNeutralMode(NeutralMode.Brake);
-    outerClimbMotor.setNeutralMode(NeutralMode.Brake);
-    bsOuterLeftMotor.setNeutralMode(NeutralMode.Brake);
-    bsOuterRightMotor.setNeutralMode(NeutralMode.Brake);
-    bsInnerLeftMotor.setNeutralMode(NeutralMode.Brake);
-    bsInnerRightMotor.setNeutralMode(NeutralMode.Brake);
+
+
 
     innerClimbMotor.setVoltage(Math.pow(innerClimb, 2) * 12);
     outerClimbMotor.setVoltage(Math.pow(outerClimb, 2) * 12);
@@ -46,7 +43,36 @@ public class ClimberSubsystem extends SubsystemBase {
 
   }
 
-  public ClimberSubsystem() {}
+  public ClimberSubsystem() {
+
+    innerClimbMotor.setNeutralMode(NeutralMode.Brake);
+    outerClimbMotor.setNeutralMode(NeutralMode.Brake);
+    bsOuterLeftMotor.setNeutralMode(NeutralMode.Brake);
+    bsOuterRightMotor.setNeutralMode(NeutralMode.Brake);
+    bsInnerLeftMotor.setNeutralMode(NeutralMode.Brake);
+    bsInnerRightMotor.setNeutralMode(NeutralMode.Brake);
+
+    innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    bsOuterLeftMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    bsOuterRightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    bsInnerLeftMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+    bsInnerRightMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 500);
+
+    innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    bsOuterLeftMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    bsOuterRightMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    bsInnerLeftMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+    bsInnerRightMotor.setStatusFramePeriod(StatusFrame.Status_4_AinTempVbat, 500);
+
+    // innerClimbMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+    // outerClimbMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+    // bsOuterLeftMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+    // bsOuterRightMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+    // bsInnerLeftMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+    // bsInnerRightMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 50);
+  }
 
   @Override
   public void periodic() {
