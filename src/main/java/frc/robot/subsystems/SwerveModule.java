@@ -5,7 +5,6 @@
 package frc.robot.subsystems;
 
 
-import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -19,15 +18,15 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.ModuleConstants;
 
 public class SwerveModule extends SubsystemBase {
-
-
 
   private final WPI_TalonFX m_driveMotor;
   private final WPI_TalonFX m_turningMotor;
@@ -113,20 +112,13 @@ public class SwerveModule extends SubsystemBase {
 
     double m_speedMetersPerSecond = 
       ModuleConstants.kDrivetoMetersPerSecond * m_driveMotor.getSelectedSensorVelocity();
-    
-    SmartDashboard.putNumber("m_speedMetersPerSecond", m_speedMetersPerSecond);
 
     double m_turningRadians =  
       ((2*Math.PI)/360) * m_turnEncoder.getAbsolutePosition();
-
-    SmartDashboard.putNumber("m_turningRadians", m_turningRadians);
-    SmartDashboard.putNumber("Turning Degrees", m_turnEncoder.getAbsolutePosition());
-
+    
     //Optimize the reference state to avoid spinning further than 90 degrees
     SwerveModuleState state = 
       SwerveModuleState.optimize(desiredState, new Rotation2d(m_turningRadians));
-
-    SmartDashboard.putNumber("desiredState", desiredState.speedMetersPerSecond);
 
     //Calculate the drive output from the drive PID controller
     final double driveOutput =
@@ -140,16 +132,7 @@ public class SwerveModule extends SubsystemBase {
 
     // Calculate the turning motor output from the turning PID controller
     m_driveMotor.setVoltage(driveOutput); 
-    m_turningMotor.setVoltage(turnOutput);
-
-    SmartDashboard.putNumber("turnPID Setpoint V", m_turningPIDController.getSetpoint().velocity);
-    SmartDashboard.putNumber("PID driveOutput", driveOutput);
-    SmartDashboard.putNumber("PID turnOutput", turnOutput);
-    SmartDashboard.putNumber("Drive Feedforward", driveFeedforward.calculate(desiredState.speedMetersPerSecond));
-    SmartDashboard.putNumber("Drive PID Output", m_drivePIDController.calculate(m_speedMetersPerSecond, state.speedMetersPerSecond));
-
-
-  
+    m_turningMotor.setVoltage(turnOutput);  
   }
 
 

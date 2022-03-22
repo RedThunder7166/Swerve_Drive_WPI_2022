@@ -12,16 +12,14 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
 
-  private ShuffleboardTab swerveTab = Shuffleboard.getTab("SDS Swerve");
+  private ShuffleboardTab swerveTab = Shuffleboard.getTab("Swerve Diagnostics");
 
   //private PowerDistribution PDP = new PowerDistribution();
 
@@ -101,8 +99,6 @@ public class DriveSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
     // Update the odometry in the periodic block
 
-    //SmartDashboard.putNumber("PDP RL Drive", PDP.getCurrent(3));
-    //SmartDashboard.putNumber("PDP RR Drive", PDP.getCurrent(13));
     gyroEntry.setDouble(m_gyro.getAngle());
 
     m_odometry.update(
@@ -144,17 +140,10 @@ public class DriveSubsystem extends SubsystemBase {
     SwerveDriveKinematics.desaturateWheelSpeeds(
       swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
 
-    
-
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
     m_rearRight.setDesiredState(swerveModuleStates[3]); 
-
-    SmartDashboard.putNumber("FL Mod Heading", m_frontLeft.getModuleHeading());
-    SmartDashboard.putNumber("FR Mod Heading", m_frontRight.getModuleHeading());
-    SmartDashboard.putNumber("RL Mod Heading", m_rearLeft.getModuleHeading());
-    SmartDashboard.putNumber("RR Mod Heading", m_rearRight.getModuleHeading());
 
     // Telemetry
     xSpeedEntry.setDouble(xSpeed);
