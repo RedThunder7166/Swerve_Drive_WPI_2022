@@ -72,7 +72,7 @@ public final class Constants {
         public static final double ksVolts = 0.509;
         public static final double kvVoltSecondsPerMeter = 2.73;
         public static final double kaVoltSecondsSquaredPerMeter = 0.124;
-        public static final double kMaxSpeedMetersPerSecond = 1.5;
+        public static final double kMaxSpeedMetersPerSecond = 2;
         public static final double kMaxRotationalSpeedMetersPerSecond = 4; // Constant multiplied by controller input
 
         public static final double ksTurning = 0.7; // FIXME feedforward turning
@@ -125,19 +125,19 @@ public final class Constants {
 
       public static final class MechanismConstants{
 
-        //Intake and indexer CAN id's
-        public static final int kIntakeMotor = 20;  
-        public static final int kfrontIndexerMotor = 21; 
-        public static final int krearIndexerMotorFalcon = 22; 
+        //Intake and indexer PWM id's
+        public static final int kIntakeMotor = 6;  
+        public static final int kfrontIndexerMotor = 0; 
+        public static final int krearIndexerMotorFalcon = 1; 
 
-        //Climb motor CAN id's
-        public static final int kOuterClimbMotor = 24; 
-        public static final int kInnerClimbMotor = 23; 
+        //Climb motor PWM id's
+        public static final int kOuterClimbMotor = 2; 
+        public static final int kInnerClimbMotor = 7; 
 
         // Ball screw motor CAN id's
-        public static final int kBSOuterLeftMotor = 25;
-        public static final int kBSOuterRightMotor = 26;
-        public static final int kBSInnerLeftMotor = 27;
-        public static final int kBSInnerRightMotor = 28;
+        public static final int kBSOuterLeftMotor = 3;
+        public static final int kBSOuterRightMotor = 5;
+        public static final int kBSInnerLeftMotor = 4;
+        public static final int kBSInnerRightMotor = 8;
       }
     }
