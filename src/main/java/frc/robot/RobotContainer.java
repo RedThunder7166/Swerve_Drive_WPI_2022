@@ -8,6 +8,8 @@ import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
@@ -46,6 +48,10 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final IndexerIntakeSubsystem m_indexerIntakeSubsystem = new IndexerIntakeSubsystem();
+
+  SendableChooser<Trajectory> m_chooser = new SendableChooser<>();
+  
+  
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -99,6 +105,8 @@ public class RobotContainer {
             true),
             
         m_robotDrive));
+    Shuffleboard.getTab("Autonomous").add(m_chooser);    
+    m_chooser.addOption("Simple Path", simplePathTrajectory);
 
   }
 
@@ -133,12 +141,19 @@ public class RobotContainer {
 
   }
 
+  TrajectoryConfig config = 
+  new TrajectoryConfig(
+    AutoConstants.kMaxSpeedMetersPerSecond,
+    AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+  // Add kinematics to ensure max speed is actually obeyed
+  .setKinematics(DriveConstants.kDriveKinematics);
 
-
-
-
-
-
+  Trajectory simplePathTrajectory = 
+    TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0, 0, new Rotation2d(0)),
+      List.of(new Translation2d(-.5, 0 )),
+      new Pose2d(-1, 0, new Rotation2d(0)), 
+      config.setReversed(true));
 
 
   /**
@@ -147,20 +162,20 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = 
-      new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-      // Add kinematics to ensure max speed is actually obeyed
-      .setKinematics(DriveConstants.kDriveKinematics);
+    // // Create config for trajectory
+    // TrajectoryConfig config = 
+    //   new TrajectoryConfig(
+    //     AutoConstants.kMaxSpeedMetersPerSecond,
+    //     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    //   // Add kinematics to ensure max speed is actually obeyed
+    //   .setKinematics(DriveConstants.kDriveKinematics);
 
-    Trajectory exampleTrajectory = 
-      TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0, 0, new Rotation2d(0)), 
-        List.of(new Translation2d(1, 0)),
-        new Pose2d(1, 1, new Rotation2d(90)),
-        config);
+    // Trajectory exampleTrajectory = 
+    //   TrajectoryGenerator.generateTrajectory(
+    //     new Pose2d(0, 0, new Rotation2d(0)), 
+    //     List.of(new Translation2d(1, 0)),
+    //     new Pose2d(1, 1, new Rotation2d(90)),
+    //     config);
 
     /** thetaController is for the x, y, and theta motions of the robot
      * PID for trajectory - makes it so you don't overshot the desired position (x, y, theta)
@@ -176,7 +191,7 @@ public class RobotContainer {
 
     SwerveControllerCommand swerveControllerCommand =
       new SwerveControllerCommand(
-        exampleTrajectory,
+        m_chooser.getSelected(),
         m_robotDrive::getPose, //Functional interface to feed the supplier
         DriveConstants.kDriveKinematics,
 
@@ -188,7 +203,7 @@ public class RobotContainer {
         m_robotDrive);
 
     // Reset odometry to the starting pose of the trajectory
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+    m_robotDrive.resetOdometry(m_chooser.getSelected().getInitialPose());
 
     // Run path following command, then stop at end
       
