@@ -9,17 +9,13 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClimberSubsystem;
 
-public class OuterArmCommand extends CommandBase {
-
+public class InnerClimbOverride extends CommandBase {
   private final ClimberSubsystem m_climberSubsystem;
-  private final DoubleSupplier m_outerClimb;
-  private final DoubleSupplier m_outerBS;
-  /** Creates a new OuterArmCommand. */
-  public OuterArmCommand(ClimberSubsystem subsystem, DoubleSupplier outerClimb, DoubleSupplier outerBS) {
-
+  private final DoubleSupplier m_innerClimb;
+  /** Creates a new InnerClimbOverride. */
+  public InnerClimbOverride(ClimberSubsystem subsystem, DoubleSupplier innerClimb) {
     m_climberSubsystem = subsystem;
-    m_outerClimb = outerClimb;
-    m_outerBS = outerBS;
+    m_innerClimb = innerClimb;
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -30,13 +26,13 @@ public class OuterArmCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_climberSubsystem.driveArms(0, m_outerClimb.getAsDouble(), 0, m_outerBS.getAsDouble());
+    m_climberSubsystem.driveInnerClimb(-.5);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_climberSubsystem.driveArms(0, 0, 0, 0);
+    m_climberSubsystem.driveInnerClimb(0);
   }
 
   // Returns true when the command should end.

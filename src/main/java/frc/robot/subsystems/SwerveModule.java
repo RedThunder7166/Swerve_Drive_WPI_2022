@@ -5,6 +5,8 @@
 package frc.robot.subsystems;
 
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
+import com.ctre.phoenix.motorcontrol.StatorCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.SupplyCurrentLimitConfiguration;
 import com.ctre.phoenix.motorcontrol.TalonFXFeedbackDevice;
@@ -67,8 +69,10 @@ public class SwerveModule extends SubsystemBase {
     m_turningMotor = new WPI_TalonFX(turningMotorChannel);
 
     // Configure current lmits for motors - prevents disabling/brownout
-    m_driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 35, 0.5));
-    m_driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 30, 35, 0.5), 100);
+    m_driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 40, 45, 0.5));
+    //m_driveMotor.configClosedloopRamp(0.25);
+    m_driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 40, 45, 0.5));
+    m_driveMotor.setNeutralMode(NeutralMode.Brake);
     
     // Configure the encoders for both motors
     
@@ -81,6 +85,8 @@ public class SwerveModule extends SubsystemBase {
     m_turningMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, 255);
     m_turningMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, 255);
     m_turningMotor.setStatusFramePeriod(StatusFrameEnhanced.Status_1_General, 255);
+
+    m_turningMotor.setNeutralMode(NeutralMode.Brake);
     
     m_turningPIDController.enableContinuousInput(-Math.PI, Math.PI);
 

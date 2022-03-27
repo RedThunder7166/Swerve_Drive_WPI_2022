@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,16 +19,26 @@ public class ClimberSubsystem extends SubsystemBase {
   private final PWMTalonFX bsInnerLeftMotor = new PWMTalonFX(Constants.MechanismConstants.kBSInnerLeftMotor);
   private final PWMTalonFX bsInnerRightMotor = new PWMTalonFX(Constants.MechanismConstants.kBSInnerRightMotor);
 
-  public void driveInnerClimb(double speed){
-    innerClimbMotor.setVoltage(speed * 12);
+  private final DigitalInput innnerClimbLimit = new DigitalInput(0);
+
+  //prevents the inner climb arms from breaking the orange line again.  ROBOT WILL NOT MOVE INNER
+  //ARMS IF THE LIMIT SWITCH IS TRIPPED
+  public void driveInnerClimb(double innerClimb){
+    innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
+
+    
   }
 //TODO: comment postive and negative directions
   public void driveArms(double innerClimb, double outerClimb, double innerBS, double outerBS){
 
-    
+    if(innnerClimbLimit.get() == false){ //FALSE IS CLICKED
+      innerClimbMotor.setVoltage(0);
+    } else {
+      innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
+    }
 
 
-    innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
+    //innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
     outerClimbMotor.setVoltage(Math.pow(outerClimb, 3) * 12);
 
     //BSinner

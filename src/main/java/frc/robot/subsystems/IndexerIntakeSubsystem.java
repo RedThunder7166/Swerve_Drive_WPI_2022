@@ -25,16 +25,18 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   //Falcon 6380 RPM
 
   private final double kNeoFalconRatio = .89;
-  private final double kp_indexer = .6;
+  private final double kp_indexer = .3;
+  private final double kp_indexer_high_speed = .65;
   private final double kp_intake = .6;
   private final double kDeadband = .1;
   private double indexerSpeed = 0;
+  private final double kp_indexer_auto = .72;
 
   /** Creates a new IndexerIntakeSubsystem. */
   public IndexerIntakeSubsystem() {}
 
 
-  public void driveIndexerIntake(double indexer, double intake){
+  public void driveIndexerIntake(double indexer, double intake, double indexerHigh){
 
     if (Math.abs(indexer) < kDeadband){
       indexerSpeed = 0;
@@ -42,10 +44,19 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
       indexerSpeed = indexer;
     }
 
-    rearIndexerMotorFalcon.setVoltage(indexerSpeed * 12 * kp_indexer * kNeoFalconRatio);
-    frontIndexerMotor.setVoltage(indexerSpeed * 12 * kp_indexer);
+    rearIndexerMotorFalcon.setVoltage(indexerSpeed * 12 * kp_indexer * kNeoFalconRatio
+                                      + indexerHigh * 12 * kp_indexer_high_speed * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(indexerSpeed * 12 * kp_indexer
+                                + indexerHigh * 12 * kp_indexer_high_speed);
 
     intakeMotor.setVoltage(intake * 12 * kp_intake);
+  }
+
+  //.65
+
+  public void shootHighAuto(double indexerAuto){
+    rearIndexerMotorFalcon.setVoltage(indexerAuto * 12 * kp_indexer_auto * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(indexerAuto * 12 * kp_indexer_auto);
   }
 
   // Publishes on the dashboard 

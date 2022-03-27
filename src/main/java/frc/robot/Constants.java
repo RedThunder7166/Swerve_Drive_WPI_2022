@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -36,10 +37,10 @@ public final class Constants {
         public static final int kFrontRightTurningEncoderPorts = 11;
         public static final int kRearRightTurningEncoderPorts = 12;
 
-        public static final double kFrontLeftAngleZero = -32.959; 
-        public static final double kRearLeftAngleZero = -28.477; 
-        public static final double kFrontRightAngleZero = -97.471; 
-        public static final double kRearRightAngleZero = 169.805; 
+        public static final double kFrontLeftAngleZero = 146.074; //-32.959
+        public static final double kRearLeftAngleZero = 152.842; //-28.477
+        public static final double kFrontRightAngleZero = 82.617; 
+        public static final double kRearRightAngleZero = -10.547; //169.805 
     
         public static final boolean kFrontLeftTurningEncoderReversed = false;
         public static final boolean kRearLeftTurningEncoderReversed = true;
@@ -94,9 +95,11 @@ public final class Constants {
         public static final double kWheelDiameterMeters = 0.1016; // 4 inches
         public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI; // C = D * pi
         public static final double kDrivetoMetersPerSecond = (10 * kWheelCircumferenceMeters)/(kDriveGearRatio * 2048);
-    
-        public static final double kPModuleTurningController = 5; // FIXME kp Turning
-        public static final double kDModuleTurningController = 0; // FIXME kD Turning
+        
+        //PID turn motor values
+
+        public static final double kPModuleTurningController = 6; // FIXME kp Turning
+        public static final double kDModuleTurningController = .1; // FIXME kD Turning
     
         public static final double kPModuleDriveController = 3; // FIXME kp driving
       }

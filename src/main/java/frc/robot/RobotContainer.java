@@ -24,7 +24,9 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.IndexerIntakeCommand;
 import frc.robot.commands.InnerArmCommand;
+import frc.robot.commands.InnerClimbOverride;
 import frc.robot.commands.OuterArmCommand;
+import frc.robot.commands.Autonomous.ShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerIntakeSubsystem;
@@ -97,16 +99,16 @@ public class RobotContainer {
         () -> 
           m_robotDrive.drive(
             modifyAxis(m_driverController.getLeftY()) // xAxis
-            * DriveConstants.kMaxSpeedMetersPerSecond, 
+            * DriveConstants.kMaxSpeedMetersPerSecond * -1, 
             modifyAxis(m_driverController.getLeftX()) // yAxis
-            * DriveConstants.kMaxSpeedMetersPerSecond, 
-            modifyAxis(m_driverController.getRightX()) // rot
-            * DriveConstants.kMaxRotationalSpeedMetersPerSecond, 
+            * DriveConstants.kMaxSpeedMetersPerSecond * -1, 
+            modifyAxis(m_driverController.getRightX() * -1) // rot
+            * DriveConstants.kMaxRotationalSpeedMetersPerSecond + m_driverController.getRawAxis(3)*-1.3 - m_driverController.getRawAxis(2)*-1.3, 
             true),
             
         m_robotDrive));
     Shuffleboard.getTab("Autonomous").add(m_chooser);    
-    m_chooser.addOption("Simple Path", simplePathTrajectory);
+    m_chooser.setDefaultOption("Simple Path", simplePathTrajectory);
 
   }
 
@@ -130,7 +132,10 @@ public class RobotContainer {
                                                   () -> m_operatorController.getLeftY()));
         OP_Select_Button.toggleWhenPressed(new IndexerIntakeCommand(m_indexerIntakeSubsystem, 
                                                                     () -> m_operatorController.getLeftY(),
-                                                                    () -> m_operatorController.getRightY()));
+                                                                    () -> m_operatorController.getRightY(),
+                                                                    () -> m_operatorController.getRawAxis(3)));
+        OP_Y_Button.whileHeld(new InnerClimbOverride(m_climberSubsystem, 
+                                                              () -> -0.5));
         
         SmartDashboard.putBoolean("Intake Active", intake);
         if(OP_Select_Button.getAsBoolean() == true){
@@ -151,8 +156,8 @@ public class RobotContainer {
   Trajectory simplePathTrajectory = 
     TrajectoryGenerator.generateTrajectory(
       new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(new Translation2d(-.5, 0 )),
-      new Pose2d(-1, 0, new Rotation2d(0)), 
+      List.of(new Translation2d(-1, 0 )),
+      new Pose2d(-1.5, 0, new Rotation2d(0)), 
       config.setReversed(true));
 
 
@@ -207,7 +212,8 @@ public class RobotContainer {
 
     // Run path following command, then stop at end
       
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    return //swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
+    new ShootCommand(m_indexerIntakeSubsystem).andThen(swerveControllerCommand);
   }
 
   private static double deadband(double value, double deadband) {
