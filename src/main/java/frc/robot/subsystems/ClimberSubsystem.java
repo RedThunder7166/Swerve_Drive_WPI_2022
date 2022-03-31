@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -12,51 +11,22 @@ import frc.robot.Constants;
 public class ClimberSubsystem extends SubsystemBase {
   /** Creates a new ClimberSubsystem. */ 
 
-  private final PWMTalonFX innerClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kInnerClimbMotor);
-  private final PWMTalonFX outerClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kOuterClimbMotor);
-  private final PWMTalonFX bsOuterLeftMotor = new PWMTalonFX(Constants.MechanismConstants.kBSOuterLeftMotor);
-  private final PWMTalonFX bsOuterRightMotor = new PWMTalonFX(Constants.MechanismConstants.kBSOuterRightMotor);
-  private final PWMTalonFX bsInnerLeftMotor = new PWMTalonFX(Constants.MechanismConstants.kBSInnerLeftMotor);
-  private final PWMTalonFX bsInnerRightMotor = new PWMTalonFX(Constants.MechanismConstants.kBSInnerRightMotor);
+  private final PWMTalonFX leftClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kInnerClimbMotor);
+  private final PWMTalonFX rightClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kOuterClimbMotor);
 
-  private final DigitalInput innnerClimbLimit = new DigitalInput(0);
 
   //prevents the inner climb arms from breaking the orange line again.  ROBOT WILL NOT MOVE INNER
   //ARMS IF THE LIMIT SWITCH IS TRIPPED
-  public void driveInnerClimb(double innerClimb){
-    innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
 
-    
-  }
 //TODO: comment postive and negative directions
-  public void driveArms(double innerClimb, double outerClimb, double innerBS, double outerBS){
-
-    if(innnerClimbLimit.get() == false){ //FALSE IS CLICKED
-      innerClimbMotor.setVoltage(0);
-    } else {
-      innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
-    }
-
-
-    //innerClimbMotor.setVoltage(Math.pow(innerClimb, 3) * 12);
-    outerClimbMotor.setVoltage(Math.pow(outerClimb, 3) * 12);
-
-    //BSinner
-    bsInnerLeftMotor.setVoltage(Math.pow(innerBS, 3) * 12);
-    bsInnerRightMotor.setVoltage(Math.pow(innerBS, 3) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
-
-    //BSouter
-    bsOuterLeftMotor.setVoltage(Math.pow(outerBS, 3) * 12);
-    bsOuterRightMotor.setVoltage(Math.pow(outerBS, 3) * -12); //MUST BE OPPOSITE SIGN - BS motors are at opposite ends
+  public void driveArms(double speed){
+    leftClimbMotor.setVoltage(speed * 12);
+    rightClimbMotor.setVoltage(speed * 12);
 
   }
 
   public ClimberSubsystem() {
-
   }
-
-
-
 
   @Override
   public void periodic() {

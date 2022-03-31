@@ -26,7 +26,6 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
 
   private final double kNeoFalconRatio = .89;
   private final double kp_indexer = .3;
-  private final double kp_indexer_high_speed = .65;
   private final double kp_intake = .6;
   private final double kDeadband = .1;
   private double indexerSpeed = 0;
@@ -36,7 +35,7 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   public IndexerIntakeSubsystem() {}
 
 
-  public void driveIndexerIntake(double indexer, double intake, double indexerHigh){
+  public void driveIndexerIntake(double indexer, double intake){
 
     if (Math.abs(indexer) < kDeadband){
       indexerSpeed = 0;
@@ -44,10 +43,8 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
       indexerSpeed = indexer;
     }
 
-    rearIndexerMotorFalcon.setVoltage(indexerSpeed * 12 * kp_indexer * kNeoFalconRatio
-                                      + indexerHigh * 12 * kp_indexer_high_speed * kNeoFalconRatio);
-    frontIndexerMotor.setVoltage(indexerSpeed * 12 * kp_indexer
-                                + indexerHigh * 12 * kp_indexer_high_speed);
+    rearIndexerMotorFalcon.setVoltage(indexerSpeed * 12 * kp_indexer * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(indexerSpeed * 12 * kp_indexer);
 
     intakeMotor.setVoltage(intake * 12 * kp_intake);
   }

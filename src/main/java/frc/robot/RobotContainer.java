@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -22,10 +21,6 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.IndexerIntakeCommand;
-import frc.robot.commands.InnerArmCommand;
-import frc.robot.commands.InnerClimbOverride;
-import frc.robot.commands.OuterArmCommand;
 import frc.robot.commands.Autonomous.ShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
@@ -44,7 +39,6 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
  */
 public class RobotContainer {
   //Boolean used to display if the conveyor system is active
-  private Boolean intake = false;
   
   // The robot's subsystems and commands are defined here...
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
@@ -107,8 +101,26 @@ public class RobotContainer {
             true),
             
         m_robotDrive));
+
     Shuffleboard.getTab("Autonomous").add(m_chooser);    
     m_chooser.setDefaultOption("Simple Path", simplePathTrajectory);
+
+    m_climberSubsystem.setDefaultCommand(
+      new RunCommand(
+        () -> 
+          m_climberSubsystem.driveArms(
+            m_operatorController.getRawAxis(3) - m_operatorController.getRawAxis(2))
+          , m_climberSubsystem)
+    );
+
+    m_indexerIntakeSubsystem.setDefaultCommand(
+      new RunCommand(
+        () -> 
+          m_indexerIntakeSubsystem.driveIndexerIntake(
+            m_operatorController.getLeftY(),
+            m_operatorController.getRightY()), 
+          m_indexerIntakeSubsystem)
+    );
 
   }
 
@@ -123,26 +135,6 @@ public class RobotContainer {
         new Button(m_driverController::getBackButton)
         // No requirements because we don't need to interrupt anything
         .whenPressed(m_robotDrive::zeroHeading);
-
-        OP_LB_Button.whenHeld(new InnerArmCommand(m_climberSubsystem, 
-                                                  () -> m_operatorController.getRightY(), 
-                                                  () -> m_operatorController.getLeftY()));
-        OP_RB_Button.whenHeld(new OuterArmCommand(m_climberSubsystem, 
-                                                  () -> m_operatorController.getRightY(), 
-                                                  () -> m_operatorController.getLeftY()));
-        OP_Select_Button.toggleWhenPressed(new IndexerIntakeCommand(m_indexerIntakeSubsystem, 
-                                                                    () -> m_operatorController.getLeftY(),
-                                                                    () -> m_operatorController.getRightY(),
-                                                                    () -> m_operatorController.getRawAxis(3)));
-        OP_Y_Button.whileHeld(new InnerClimbOverride(m_climberSubsystem, 
-                                                              () -> -0.5));
-        
-        SmartDashboard.putBoolean("Intake Active", intake);
-        if(OP_Select_Button.getAsBoolean() == true){
-          intake = true;
-        } else {
-          intake = false;
-        }
 
   }
 
