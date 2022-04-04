@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import edu.wpi.first.wpilibj.motorcontrol.PWMTalonFX;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,6 +19,7 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
   private final PWMTalonFX intakeMotor = new PWMTalonFX(Constants.MechanismConstants.kIntakeMotor);
   private final PWMSparkMax frontIndexerMotor = new PWMSparkMax(Constants.MechanismConstants.kfrontIndexerMotor);
   
+
   
 
 
@@ -56,10 +58,23 @@ public class IndexerIntakeSubsystem extends SubsystemBase {
     frontIndexerMotor.setVoltage(indexerAuto * 12 * kp_indexer_auto);
   }
 
-  // Publishes on the dashboard 
-  public void setIntakeActive(boolean activity){
-    SmartDashboard.putBoolean("Intake Active", activity);
+
+  public void testIntake(double speed){
+    rearIndexerMotorFalcon.setVoltage(speed * -12 * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(speed * -12);
+
+    intakeMotor.setVoltage(speed * 12 * kp_intake);
   }
+
+  public void shootHigh(double speed){
+    rearIndexerMotorFalcon.setVoltage(speed * -12 * kNeoFalconRatio);
+    frontIndexerMotor.setVoltage(speed * -12);
+
+    intakeMotor.setVoltage(speed * 12 * kp_intake);
+  }
+
+
+
 
 
 

@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import java.util.List;
+
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryConfig;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
@@ -123,6 +131,25 @@ public final class Constants {
         public static final TrapezoidProfile.Constraints kThetaControllerConstraints =
             new TrapezoidProfile.Constraints(
                 kMaxAngularSpeedRadiansPerSecond, kMaxAngularAccelerationRadiansPerSecondSquared);
+
+        public static final TrajectoryConfig config = 
+                new TrajectoryConfig(
+                  AutoConstants.kMaxSpeedMetersPerSecond,
+                  AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                // Add kinematics to ensure max speed is actually obeyed
+                .setKinematics(DriveConstants.kDriveKinematics);
+              
+        public static final Trajectory movingOutTrajectory = 
+                  TrajectoryGenerator.generateTrajectory(
+                    new Pose2d(0, 0, new Rotation2d(0)),
+                    List.of(new Translation2d(-1, 0 )),
+                    new Pose2d(-1.5, 0, new Rotation2d(0)), 
+                    config.setReversed(true));
+
+        public static final ProfiledPIDController thetaController = 
+                    new ProfiledPIDController(
+                      AutoConstants.kPThetaController, 0 , 0, AutoConstants.kThetaControllerConstraints);
+                  
       }
 
       public static final class MechanismConstants{
@@ -142,4 +169,5 @@ public final class Constants {
         public static final int kBSInnerLeftMotor = 4;
         public static final int kBSInnerRightMotor = 8;
       }
+      
     }

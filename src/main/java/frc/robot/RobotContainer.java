@@ -21,11 +21,16 @@ import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Autonomous.ShootCommand;
+import frc.robot.commands.ShootHighCommand;
+import frc.robot.commands.ShootingAdjustCommand;
+import frc.robot.commands.testShootingCommand;
+import frc.robot.commands.Autonomous.SimpleShootCommand;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerIntakeSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
@@ -44,6 +49,7 @@ public class RobotContainer {
   private final DriveSubsystem m_robotDrive = new DriveSubsystem();
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final IndexerIntakeSubsystem m_indexerIntakeSubsystem = new IndexerIntakeSubsystem();
+  private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
 
   SendableChooser<Trajectory> m_chooser = new SendableChooser<>();
   
@@ -103,7 +109,7 @@ public class RobotContainer {
         m_robotDrive));
 
     Shuffleboard.getTab("Autonomous").add(m_chooser);    
-    m_chooser.setDefaultOption("Simple Path", simplePathTrajectory);
+    m_chooser.setDefaultOption("1 Ball Auto", simplePathTrajectory);
 
     m_climberSubsystem.setDefaultCommand(
       new RunCommand(
@@ -135,6 +141,9 @@ public class RobotContainer {
         new Button(m_driverController::getBackButton)
         // No requirements because we don't need to interrupt anything
         .whenPressed(m_robotDrive::zeroHeading);
+
+        DR_Y_Button.whenHeld(new ShootingAdjustCommand(m_visionSubsystem, m_robotDrive));
+        OP_RB_Button.whenHeld(new ShootHighCommand(m_visionSubsystem, m_indexerIntakeSubsystem));
 
   }
 
@@ -205,7 +214,7 @@ public class RobotContainer {
     // Run path following command, then stop at end
       
     return //swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-    new ShootCommand(m_indexerIntakeSubsystem).andThen(swerveControllerCommand);
+    new SimpleShootCommand(m_indexerIntakeSubsystem).andThen(swerveControllerCommand);
   }
 
   private static double deadband(double value, double deadband) {

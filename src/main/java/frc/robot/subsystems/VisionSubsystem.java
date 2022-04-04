@@ -10,12 +10,13 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class VisionSubsystem extends SubsystemBase {
 
   PhotonCamera camera = new PhotonCamera("photonvision");
-  private final PIDController m_aimPIDController = new PIDController(2, 0, 0); // FIXME: Adjust KP for aiming
+  private final PIDController m_aimPIDController = new PIDController(.08, .05, 0); // FIXME: Adjust KP for aiming
   
   /** Creates a new VisionSubsystem. */
   public VisionSubsystem() {}
@@ -53,8 +54,22 @@ public class VisionSubsystem extends SubsystemBase {
     return result.hasTargets();
   }
 
+  public double calculateLaunchSpeed(){
+    var result = camera.getLatestResult();
+    List<PhotonTrackedTarget> targets = result.getTargets();
+
+    if(result.hasTargets()){
+      return -0.0411 * getArea() + 1;
+    } else{
+      return 0;
+    }
+  }
+  
+
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Has Target?", cameraHasTargets());
+
     // This method will be called once per scheduler run
   }
 }

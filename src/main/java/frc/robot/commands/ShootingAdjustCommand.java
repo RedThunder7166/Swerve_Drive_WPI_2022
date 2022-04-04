@@ -31,10 +31,9 @@ public class ShootingAdjustCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double range = 1.0; // Range in which it will adjust
+    double range = 1; // Range in which it will adjust
     double yaw = m_visionSubsystem.getYaw();
     double pidOutput = m_visionSubsystem.getAimPIDCaculation();
-    SmartDashboard.putBoolean("Has Target?", m_visionSubsystem.cameraHasTargets());
 
     if(m_visionSubsystem.cameraHasTargets() == true){
       
@@ -42,8 +41,12 @@ public class ShootingAdjustCommand extends CommandBase {
         m_driveSubsystem.drive(0, 0, pidOutput, true);
       } else if(yaw < -1 *range){
         m_driveSubsystem.drive(0, 0, pidOutput, true);
+      } else {
+        m_driveSubsystem.drive(0, 0, 0, true);
       }
-    } else{}
+    } else{
+        m_driveSubsystem.drive(0, 0, 0, true);
+    }
   }
 
   // Called once the command ends or is interrupted.
