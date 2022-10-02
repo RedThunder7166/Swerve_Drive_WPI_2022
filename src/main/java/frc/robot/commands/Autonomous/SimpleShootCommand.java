@@ -17,6 +17,7 @@ public class SimpleShootCommand extends CommandBase {
   public SimpleShootCommand(IndexerIntakeSubsystem subsystem) {
     m_indexerIntakeSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_indexerIntakeSubsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -29,23 +30,19 @@ public class SimpleShootCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {    
-    if(m_timer.get() < 3){
       m_indexerIntakeSubsystem.shootHighAuto(-1);
-    } else {
-      m_indexerIntakeSubsystem.shootHighAuto(0);;
-    }
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_indexerIntakeSubsystem.shootHighAuto(0);;
+    m_indexerIntakeSubsystem.shootHighAuto(0);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_timer.get() < 3){
+    if(m_timer.get() < 4){
       return false;
     } else {
       return true;

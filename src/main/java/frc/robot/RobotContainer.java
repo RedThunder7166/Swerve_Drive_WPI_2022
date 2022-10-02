@@ -4,35 +4,26 @@
 
 package frc.robot;
 
-import java.util.List;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.ShootHighCommand;
 import frc.robot.commands.ShootingAdjustCommand;
-import frc.robot.commands.testShootingCommand;
-import frc.robot.commands.Autonomous.SimpleShootCommand;
+import frc.robot.commands.Autonomous.OneBallAuto;
+import frc.robot.commands.Autonomous.TwoBallAuto;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IndexerIntakeSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
+import frc.robot.subsystems.ThetaController;
 import frc.robot.subsystems.VisionSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
@@ -50,8 +41,11 @@ public class RobotContainer {
   private final ClimberSubsystem m_climberSubsystem = new ClimberSubsystem();
   private final IndexerIntakeSubsystem m_indexerIntakeSubsystem = new IndexerIntakeSubsystem();
   private final VisionSubsystem m_visionSubsystem = new VisionSubsystem();
+  private final ThetaController m_thetaController = new ThetaController();
+  private final LEDSubsystem m_ledSubsystem = new LEDSubsystem();
 
   SendableChooser<Trajectory> m_chooser = new SendableChooser<>();
+  SendableChooser<Command> m_commandChooser = new SendableChooser<>();
   
   
 
@@ -109,7 +103,10 @@ public class RobotContainer {
         m_robotDrive));
 
     Shuffleboard.getTab("Autonomous").add(m_chooser);    
-    m_chooser.setDefaultOption("1 Ball Auto", simplePathTrajectory);
+
+    Shuffleboard.getTab("Autonomous").add(m_commandChooser);
+    m_commandChooser.setDefaultOption("1 Ball Auto", new OneBallAuto(m_robotDrive, m_indexerIntakeSubsystem, m_thetaController));
+    m_commandChooser.addOption("2 Ball Auto", new TwoBallAuto(m_robotDrive, m_indexerIntakeSubsystem, m_visionSubsystem, m_thetaController, m_ledSubsystem));
 
     m_climberSubsystem.setDefaultCommand(
       new RunCommand(
@@ -147,19 +144,7 @@ public class RobotContainer {
 
   }
 
-  TrajectoryConfig config = 
-  new TrajectoryConfig(
-    AutoConstants.kMaxSpeedMetersPerSecond,
-    AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-  // Add kinematics to ensure max speed is actually obeyed
-  .setKinematics(DriveConstants.kDriveKinematics);
 
-  Trajectory simplePathTrajectory = 
-    TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0, 0, new Rotation2d(0)),
-      List.of(new Translation2d(-1, 0 )),
-      new Pose2d(-1.5, 0, new Rotation2d(0)), 
-      config.setReversed(true));
 
 
   /**
@@ -168,53 +153,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // // Create config for trajectory
-    // TrajectoryConfig config = 
-    //   new TrajectoryConfig(
-    //     AutoConstants.kMaxSpeedMetersPerSecond,
-    //     AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    //   // Add kinematics to ensure max speed is actually obeyed
-    //   .setKinematics(DriveConstants.kDriveKinematics);
 
-    // Trajectory exampleTrajectory = 
-    //   TrajectoryGenerator.generateTrajectory(
-    //     new Pose2d(0, 0, new Rotation2d(0)), 
-    //     List.of(new Translation2d(1, 0)),
-    //     new Pose2d(1, 1, new Rotation2d(90)),
-    //     config);
-
-    /** thetaController is for the x, y, and theta motions of the robot
-     * PID for trajectory - makes it so you don't overshot the desired position (x, y, theta)
-     * Error for x/y is meters, theta is degrees/radians
-     * Tune them by making solo x/y trajectories as well as theta trajectories
-    */
-
-    var thetaController = 
-      new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0 , 0, AutoConstants.kThetaControllerConstraints);
-    
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand =
-      new SwerveControllerCommand(
-        m_chooser.getSelected(),
-        m_robotDrive::getPose, //Functional interface to feed the supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory
-    m_robotDrive.resetOdometry(m_chooser.getSelected().getInitialPose());
-
-    // Run path following command, then stop at end
       
-    return //swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false));
-    new SimpleShootCommand(m_indexerIntakeSubsystem).andThen(swerveControllerCommand);
+    return m_commandChooser.getSelected();
   }
 
   private static double deadband(double value, double deadband) {

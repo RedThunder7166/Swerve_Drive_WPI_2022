@@ -2,22 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.Autonomous;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 
 
 
-public class ShootingAdjustCommand extends CommandBase {
+public class ShootAdjustAuto extends CommandBase {
 
   private final VisionSubsystem m_visionSubsystem;
   private final DriveSubsystem m_driveSubsystem;
+  private final LEDSubsystem m_ledSubsystem;
+  private final Timer m_timer = new Timer();
   /** Creates a new ShootingAdjustCommand. */
-  public ShootingAdjustCommand(VisionSubsystem subsystem, DriveSubsystem subsystem2) {
+  public ShootAdjustAuto(VisionSubsystem subsystem, DriveSubsystem subsystem2, LEDSubsystem led) {
     m_visionSubsystem = subsystem;
     m_driveSubsystem = subsystem2;
+    m_ledSubsystem = led;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_driveSubsystem);
     addRequirements(m_visionSubsystem);
@@ -25,7 +30,10 @@ public class ShootingAdjustCommand extends CommandBase {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_timer.reset();
+    m_timer.start();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -35,7 +43,7 @@ public class ShootingAdjustCommand extends CommandBase {
     double pidOutput = m_visionSubsystem.getAimPIDCaculation();
 
     if(m_visionSubsystem.hubCameraHasTargets() == true){
-      
+      m_ledSubsystem.setLED(.77);
       if(yaw > range){
         m_driveSubsystem.drive(0, 0, pidOutput, true);
       } else if(yaw < -1 *range){
@@ -45,6 +53,7 @@ public class ShootingAdjustCommand extends CommandBase {
       }
     } else{
         m_driveSubsystem.drive(0, 0, 0, true);
+        m_ledSubsystem.setLED(-.05);
     }
   }
 
@@ -52,11 +61,19 @@ public class ShootingAdjustCommand extends CommandBase {
   @Override
   public void end(boolean interrupted) {
     m_driveSubsystem.drive(0,0,0,true);
+    m_ledSubsystem.setLED(-.25);
+
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    double yaw = m_visionSubsystem.getHubYaw();
+
+    if(Math.abs(yaw) < 1 || m_timer.get() > 3){
+      return true;
+    } else{
+      return false;
+    }
   }
 }

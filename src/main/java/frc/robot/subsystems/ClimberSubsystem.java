@@ -16,18 +16,24 @@ public class ClimberSubsystem extends SubsystemBase {
   private final PWMTalonFX leftClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kInnerClimbMotor);
   private final PWMTalonFX rightClimbMotor = new PWMTalonFX(Constants.MechanismConstants.kOuterClimbMotor);
   private final DigitalInput rightArmInput = new DigitalInput(0);
+  private final DigitalInput leftArmInput = new DigitalInput(1);
 
 
   //prevents the inner climb arms from breaking the orange line again.  ROBOT WILL NOT MOVE INNER
   //ARMS IF THE LIMIT SWITCH IS TRIPPED
 
-//TODO: comment postive and negative directions
+
   public void driveArms(double speed){
-    if(rightArmInput.get() == false && speed < 0){
+    if(leftArmInput.get() == false && speed < 0){
       leftClimbMotor.setVoltage(0);
-      rightClimbMotor.setVoltage(0);
     } else {
       leftClimbMotor.setVoltage(speed * 12);
+    }
+
+
+    if(rightArmInput.get() == false && speed < 0){
+      rightClimbMotor.setVoltage(0);
+    } else {
       rightClimbMotor.setVoltage(speed * 12);
     }
 
@@ -38,7 +44,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("DIO 0", rightArmInput.get());
+    SmartDashboard.putBoolean("Right Arm", rightArmInput.get());
+    SmartDashboard.putBoolean("Left Arm ", leftArmInput.get());
     // This method will be called once per scheduler run
   }
 }

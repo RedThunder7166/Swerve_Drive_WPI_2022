@@ -10,6 +10,8 @@ import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,11 +21,13 @@ public class VisionSubsystem extends SubsystemBase {
   private final PIDController m_aimPIDController = new PIDController(.08, .05, 0); // FIXME: Adjust KP for aiming
   
   /** Creates a new VisionSubsystem. */
-  public VisionSubsystem() {}
+  public VisionSubsystem() {
+
+  }
 
   //Negative yaw means target is to the left
   //Positive yaw means target is to the right
-  public double getYaw(){
+  public double getHubYaw(){
     var result = camera.getLatestResult();
     List<PhotonTrackedTarget> targets = result.getTargets();
     
@@ -35,10 +39,10 @@ public class VisionSubsystem extends SubsystemBase {
   }
 
   public double getAimPIDCaculation(){
-    return m_aimPIDController.calculate(getYaw(), 0);
+    return m_aimPIDController.calculate(getHubYaw(), 0);
   }
 
-  public double getArea(){
+  public double getHubArea(){
     var result = camera.getLatestResult();
     List<PhotonTrackedTarget> targets = result.getTargets();
 
@@ -49,26 +53,28 @@ public class VisionSubsystem extends SubsystemBase {
     }
   }
 
-  public boolean cameraHasTargets(){
+  public boolean hubCameraHasTargets(){
     var result = camera.getLatestResult();
     return result.hasTargets();
   }
 
   public double calculateLaunchSpeed(){
-    var result = camera.getLatestResult();
-    List<PhotonTrackedTarget> targets = result.getTargets();
+      return .8;
+    
+  }
 
-    if(result.hasTargets()){
-      return -0.0411 * getArea() + 1;
+  public boolean isRedAlliance(){
+    if(DriverStation.getAlliance() == Alliance.Red){
+      return true;
     } else{
-      return 0;
+      return false;
     }
   }
   
 
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Has Target?", cameraHasTargets());
+    SmartDashboard.putBoolean("Has Target?", hubCameraHasTargets());
 
     // This method will be called once per scheduler run
   }

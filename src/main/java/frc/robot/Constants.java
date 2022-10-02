@@ -80,10 +80,10 @@ public final class Constants {
         public static final double ksVolts = 0.509;
         public static final double kvVoltSecondsPerMeter = 2.73;
         public static final double kaVoltSecondsSquaredPerMeter = 0.124;
-        public static final double kMaxSpeedMetersPerSecond = 2;
+        public static final double kMaxSpeedMetersPerSecond = 3;
         public static final double kMaxRotationalSpeedMetersPerSecond = 4; // Constant multiplied by controller input
 
-        public static final double ksTurning = 0.7; // FIXME feedforward turning
+        public static final double ksTurning = 0.7; 
         public static final double kvTurning = 0.216;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI * 2;
 
@@ -94,7 +94,7 @@ public final class Constants {
         // Turning motor -> CTRE CANcoder (4096 units)
         public static final double kMaxModuleAngularSpeedRadiansPerSecond = 20 * Math.PI;
         public static final double kMaxModuleAngularAccelerationRadiansPerSecondSquared = 35 * Math.PI;
-        public static final double kDriveGearRatio = 8.14;
+        public static final double kDriveGearRatio = 8.14; // Todo: 
         public static final double kTurningGearRatio = 12.8;
 
         public static final int kDriveFXEncoderCPR = 2048;
@@ -105,10 +105,10 @@ public final class Constants {
         
         //PID turn motor values
 
-        public static final double kPModuleTurningController = 6; // FIXME kp Turning
-        public static final double kDModuleTurningController = .1; // FIXME kD Turning
+        public static final double kPModuleTurningController = 6; 
+        public static final double kDModuleTurningController = .1; 
     
-        public static final double kPModuleDriveController = 3; // FIXME kp driving
+        public static final double kPModuleDriveController = 3; 
       }
     
       public static final class OIConstants {
@@ -118,8 +118,8 @@ public final class Constants {
       }
     
       public static final class AutoConstants {
-        public static final double kMaxSpeedMetersPerSecond = 2;
-        public static final double kMaxAccelerationMetersPerSecondSquared = 2;
+        public static final double kMaxSpeedMetersPerSecond = 1.35;//changed from 1.5, 10% change
+        public static final double kMaxAccelerationMetersPerSecondSquared = 1.5;
         public static final double kMaxAngularSpeedRadiansPerSecond = Math.PI;
         public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI;
     
@@ -145,6 +145,20 @@ public final class Constants {
                     List.of(new Translation2d(-1, 0 )),
                     new Pose2d(-1.5, 0, new Rotation2d(0)), 
                     config.setReversed(true));
+
+        public static final Trajectory grabSecondBallTrajectory=
+                  TrajectoryGenerator.generateTrajectory(
+                    new Pose2d(0, 0, new Rotation2d(0)),
+                    List.of(new Translation2d(0, 1)), 
+                    new Pose2d(0, 1.7, new Rotation2d(0)), 
+                    config);
+        
+        public static final Trajectory rotate90Trajectory = 
+                  TrajectoryGenerator.generateTrajectory(
+                    new Pose2d(0, 1, new Rotation2d(0)), 
+                    List.of(new Translation2d(-.5, -.5)), 
+                    new Pose2d(-1, -1, new Rotation2d(Math.toRadians(-50))), 
+                    config);
 
         public static final ProfiledPIDController thetaController = 
                     new ProfiledPIDController(

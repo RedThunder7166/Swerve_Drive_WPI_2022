@@ -18,6 +18,8 @@ public class ThetaController extends SubsystemBase {
                       AutoConstants.kPThetaController, 0 , 0, AutoConstants.kThetaControllerConstraints);
 
     thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    
   }
 
   public ProfiledPIDController getThetaController(){
